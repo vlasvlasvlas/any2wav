@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "any2wav"
+version = "1.0.0"
+description = "Conversor universal de audio - extrae audio de cualquier archivo multimedia"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Vladimir Obellini"}
+]
+keywords = ["audio", "converter", "ffmpeg", "wav", "mp3", "multimedia"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio :: Conversion",
+]
+dependencies = [
+    "rich>=13.0.0",
+]
+
+[project.scripts]
+any2wav = "any2wav.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
