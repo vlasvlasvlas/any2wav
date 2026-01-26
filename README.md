@@ -15,6 +15,12 @@
 
 > Extrae audio de cualquier archivo multimedia y conviértelo a WAV o MP3
 
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![FFmpeg](https://img.shields.io/badge/FFmpeg-required-orange.svg)](https://ffmpeg.org)
+
+![any2wav menu](screenshot.png)
+
 ---
 
 ## ✨ Características
@@ -53,13 +59,32 @@ sudo apt install ffmpeg
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/any2wav.git
+git clone https://github.com/vlasvlasvlas/any2wav.git
 cd any2wav
 
 # Ejecutar setup (crea venv e instala dependencias)
 chmod +x setup.sh
 ./setup.sh
 ```
+
+---
+
+## 📁 Carpetas de Trabajo
+
+Por defecto, any2wav usa estas carpetas:
+
+```
+any2wav/
+├── in/     ← Poné acá tus archivos a convertir
+└── out/    ← Acá aparecen los archivos convertidos
+    ├── wav/
+    └── mp3/
+```
+
+**Simplemente:**
+1. Copiá tus archivos a `./in`
+2. Ejecutá `./run.sh`
+3. Encontralos convertidos en `./out/wav` o `./out/mp3`
 
 ---
 
@@ -72,9 +97,9 @@ chmod +x setup.sh
 ```
 
 Abre un menú visual donde podés:
-- Seleccionar carpeta de entrada
+- Ver/cambiar carpeta de entrada y salida
 - Elegir formato de salida (WAV/MP3)
-- Activar búsqueda recursiva
+- Incluir subcarpetas en la búsqueda
 - Ver preview antes de convertir
 
 ### Opción 2: Línea de Comandos
@@ -84,19 +109,19 @@ Abre un menú visual donde podés:
 source venv/bin/activate
 
 # Convertir todos los archivos a WAV
-any2wav ./mi_carpeta -f wav
+any2wav ./in -f wav
 
 # Convertir a MP3
-any2wav ./mi_carpeta -f mp3
+any2wav ./in -f mp3
 
-# Buscar en subcarpetas
-any2wav ./mi_carpeta -f wav -r
+# Especificar otra carpeta
+any2wav ./mi_carpeta -o ./otra_salida -f wav
 
-# Especificar carpeta de salida
-any2wav ./mi_carpeta -o ./converted -f wav
+# Incluir subcarpetas
+any2wav ./in -f wav -r
 
 # Ver qué haría sin ejecutar (dry-run)
-any2wav ./mi_carpeta --dry-run
+any2wav ./in --dry-run
 
 # Ver ayuda
 any2wav --help
@@ -104,36 +129,20 @@ any2wav --help
 
 ---
 
-## 📁 Estructura de Salida
-
-```
-output/
-├── wav/
-│   ├── cancion1.wav
-│   └── video_audio.wav
-├── mp3/
-│   └── cancion1.mp3
-├── any2wav.log         # Log de ejecución
-└── conversions.json    # Registro de conversiones
-```
-
----
-
 ## 📊 Display Visual
 
 ```
-╔══════════════════════════════════════════════════╗
-║       A N Y 2 W A V                              ║
-║       Conversor Universal de Audio               ║
-╚══════════════════════════════════════════════════╝
+╔═══════════════════════════════════════════════════════════════════╗
+║               any2wav - Conversor Universal de Audio              ║
+╚═══════════════════════════════════════════════════════════════════╝
 
-ℹ️  Buscando archivos multimedia en ./input...
+ℹ️  Buscando archivos multimedia en in...
 
 ┌─────────────────────┬───────────────────┐
 │ Configuración       │ Valor             │
 ├─────────────────────┼───────────────────┤
-│ 📂 Carpeta entrada  │ ./input           │
-│ 📁 Carpeta salida   │ ./output/wav      │
+│ 📂 Carpeta entrada  │ in                │
+│ 📁 Carpeta salida   │ out/wav           │
 │ 🎵 Formato salida   │ WAV               │
 │ 📊 Archivos         │ 5                 │
 └─────────────────────┴───────────────────┘
@@ -143,7 +152,6 @@ Convirtiendo a WAV... ━━━━━━━━━━ 100% 0:00:12
 ✅ cancion.mp3 → wav (12.5 MB, 3:45)
 ✅ video.mp4 → wav (8.2 MB, 2:30)
 ⏩ audio.wav → ya existe, saltando
-⏭️  silent.mp4 - Sin pista de audio
 
 ✅ ¡Conversión completada!
 ```
@@ -152,28 +160,10 @@ Convirtiendo a WAV... ━━━━━━━━━━ 100% 0:00:12
 
 ## 📝 Logs
 
-### Log de ejecución (`any2wav.log`)
-```
-2024-01-26 10:30:15 | INFO     | === Iniciando conversión ===
-2024-01-26 10:30:15 | INFO     | Input: ./input
-2024-01-26 10:30:15 | INFO     | OK: cancion.mp3 -> ./output/wav/cancion.wav
-```
+Los logs se guardan en la carpeta de salida:
 
-### Registro de conversiones (`conversions.json`)
-```json
-{
-  "last_updated": "2024-01-26T10:30:45",
-  "total_conversions": 3,
-  "conversions": [
-    {
-      "timestamp": "2024-01-26T10:30:20",
-      "input_file": "./input/cancion.mp3",
-      "output_file": "./output/wav/cancion.wav",
-      "success": true
-    }
-  ]
-}
-```
+- **`any2wav.log`** - Log de ejecución
+- **`conversions.json`** - Registro de conversiones
 
 ---
 
@@ -181,17 +171,15 @@ Convirtiendo a WAV... ━━━━━━━━━━ 100% 0:00:12
 
 ```
 any2wav/
-├── any2wav/
-│   ├── __init__.py      # Package version
-│   ├── __main__.py      # python -m entry point
-│   ├── cli.py           # CLI con Rich UI
-│   ├── converter.py     # FFmpeg wrapper
-│   ├── detector.py      # FFprobe wrapper
-│   └── logger.py        # Dual logging
-├── run.sh               # Menú interactivo
-├── setup.sh             # Setup venv + deps
-├── requirements.txt
-├── pyproject.toml
+├── any2wav/           # Módulos Python
+│   ├── cli.py         # CLI con Rich UI
+│   ├── converter.py   # FFmpeg wrapper
+│   ├── detector.py    # FFprobe wrapper
+│   └── logger.py      # Sistema de logging
+├── in/                # Archivos a convertir
+├── out/               # Archivos convertidos
+├── run.sh             # Menú interactivo
+├── setup.sh           # Setup automático
 └── README.md
 ```
 
@@ -200,3 +188,7 @@ any2wav/
 ## 📄 Licencia
 
 MIT
+
+---
+
+**💡 Tip:** Este proyecto nació de la necesidad de convertir archivos para subir a Bandcamp, que requiere formato WAV.

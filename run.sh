@@ -16,8 +16,8 @@ DIM='\033[2m'
 NC='\033[0m'
 
 # Variables
-INPUT_DIR=""
-OUTPUT_DIR="./output"
+INPUT_DIR="./in"
+OUTPUT_DIR="./out"
 FORMAT="wav"
 RECURSIVE=false
 
@@ -31,18 +31,18 @@ show_header() {
     echo ""
     echo -e "${CYAN}"
     cat << 'EOF'
-    ╔═══════════════════════════════════════════════════════════════════╗
-    ║                                                                   ║
-    ║      █████╗ ███╗  ██╗██╗   ██╗██████╗ ██╗    ██╗ █████╗ ██╗   ██╗ ║
-    ║     ██╔══██╗████╗ ██║╚██╗ ██╔╝╚════██╗██║    ██║██╔══██╗██║   ██║ ║
-    ║     ███████║██╔██╗██║ ╚████╔╝  █████╔╝██║ █╗ ██║███████║██║   ██║ ║
-    ║     ██╔══██║██║╚████║  ╚██╔╝  ██╔═══╝ ██║███╗██║██╔══██║╚██╗ ██╔╝ ║
-    ║     ██║  ██║██║ ╚███║   ██║   ███████╗╚███╔███╔╝██║  ██║ ╚████╔╝  ║
-    ║     ╚═╝  ╚═╝╚═╝  ╚══╝   ╚═╝   ╚══════╝ ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝   ║
-    ║                                                                   ║
-    ║               Conversor Universal de Audio                        ║
-    ║                                                                   ║
-    ╚═══════════════════════════════════════════════════════════════════╝
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║      █████╗ ███╗  ██╗██╗   ██╗██████╗ ██╗    ██╗ █████╗ ██╗   ██╗ ║
+║     ██╔══██╗████╗ ██║╚██╗ ██╔╝╚════██╗██║    ██║██╔══██╗██║   ██║ ║
+║     ███████║██╔██╗██║ ╚████╔╝  █████╔╝██║ █╗ ██║███████║██║   ██║ ║
+║     ██╔══██║██║╚████║  ╚██╔╝  ██╔═══╝ ██║███╗██║██╔══██║╚██╗ ██╔╝ ║
+║     ██║  ██║██║ ╚███║   ██║   ███████╗╚███╔███╔╝██║  ██║ ╚████╔╝  ║
+║     ╚═╝  ╚═╝╚═╝  ╚══╝   ╚═╝   ╚══════╝ ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝   ║
+║                                                                   ║
+║               Conversor Universal de Audio                        ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
 EOF
     echo -e "${NC}"
 }
@@ -68,13 +68,13 @@ show_config() {
     fi
     
     if [ "$RECURSIVE" = true ]; then
-        echo -e "${WHITE}│${NC}  🔄 Recursivo:        ${GREEN}Sí${NC} (incluye subcarpetas)"
+        echo -e "${WHITE}│${NC}  � Subcarpetas:      ${GREEN}Sí${NC} (busca dentro de carpetas)"
     else
-        echo -e "${WHITE}│${NC}  🔄 Recursivo:        ${DIM}No${NC}"
+        echo -e "${WHITE}│${NC}  � Subcarpetas:      ${DIM}No${NC} (solo archivos directos)"
     fi
     
     echo -e "${WHITE}│${NC}"
-    echo -e "${WHITE}└─────────────────────────────────────────────────────────────┘${NC}"
+    echo -e "${WHITE}└────────────────────────────────────────────────────────────┘${NC}"
 }
 
 # Menú principal
@@ -85,10 +85,10 @@ show_menu() {
     echo -e "${YELLOW}║${NC}   ${WHITE}1.${NC} 📂  Seleccionar carpeta de entrada            ${YELLOW}║${NC}"
     echo -e "${YELLOW}║${NC}   ${WHITE}2.${NC} 📁  Cambiar carpeta de salida                 ${YELLOW}║${NC}"
     echo -e "${YELLOW}║${NC}   ${WHITE}3.${NC} 🎵  Cambiar formato (WAV/MP3)                 ${YELLOW}║${NC}"
-    echo -e "${YELLOW}║${NC}   ${WHITE}4.${NC} 🔄  Toggle búsqueda recursiva                 ${YELLOW}║${NC}"
+    echo -e "${YELLOW}║${NC}   ${WHITE}4.${NC} �  Incluir/excluir subcarpetas                ${YELLOW}║${NC}"
     echo -e "${YELLOW}║${NC}                                                    ${YELLOW}║${NC}"
     echo -e "${YELLOW}║${NC}   ${GREEN}5.${NC} 🚀  ${GREEN}CONVERTIR${NC}                                 ${YELLOW}║${NC}"
-    echo -e "${YELLOW}║${NC}   ${CYAN}6.${NC} 👁️   Ver preview (dry-run)                    ${YELLOW}║${NC}"
+    echo -e "${YELLOW}║${NC}   ${CYAN}6.${NC} 👁️   Ver preview (dry-run)                     ${YELLOW}║${NC}"
     echo -e "${YELLOW}║${NC}                                                    ${YELLOW}║${NC}"
     echo -e "${YELLOW}║${NC}   ${RED}0.${NC} ❌  Salir                                     ${YELLOW}║${NC}"
     echo -e "${YELLOW}║${NC}                                                    ${YELLOW}║${NC}"
@@ -152,16 +152,16 @@ toggle_format() {
     sleep 1
 }
 
-# Toggle recursivo
+# Toggle subcarpetas
 toggle_recursive() {
     if [ "$RECURSIVE" = true ]; then
         RECURSIVE=false
         echo ""
-        echo -e "${BLUE}🔄 Búsqueda recursiva: DESACTIVADA${NC}"
+        echo -e "${BLUE}� Subcarpetas: NO (solo archivos en ./in)${NC}"
     else
         RECURSIVE=true
         echo ""
-        echo -e "${GREEN}🔄 Búsqueda recursiva: ACTIVADA${NC}"
+        echo -e "${GREEN}📁 Subcarpetas: SÍ (busca en todas las carpetas dentro de ./in)${NC}"
     fi
     sleep 1
 }

@@ -30,8 +30,11 @@ wheels/
 *.log
 logs/
 
-# Conversion output (optional - uncomment if you want to ignore)
-# output/
+# Conversion folders (keep folders, ignore contents)
+in/*
+!in/.gitkeep
+out/*
+!out/.gitkeep
 
 # IDE
 .idea/

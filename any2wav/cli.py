@@ -285,8 +285,8 @@ Ejemplos:
     parser.add_argument(
         '-o', '--output',
         type=Path,
-        default=Path('./output'),
-        help='Carpeta de salida (default: ./output)'
+        default=Path('./out'),
+        help='Carpeta de salida (default: ./out)'
     )
     
     parser.add_argument(

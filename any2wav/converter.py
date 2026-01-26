@@ -87,6 +87,7 @@ def get_output_path(
     Genera la ruta de salida para un archivo.
     
     La estructura es: output_dir/formato/nombre_archivo.extension
+    Quita todas las extensiones conocidas del nombre original.
     
     Args:
         input_path: Archivo de entrada
@@ -96,10 +97,22 @@ def get_output_path(
     Returns:
         Path del archivo de salida
     """
+    from .detector import KNOWN_EXTENSIONS
+    
     format_dir = output_dir / output_format.value
     format_dir.mkdir(parents=True, exist_ok=True)
     
-    output_name = input_path.stem + output_format.extension
+    # Quitar todas las extensiones conocidas del nombre
+    name = input_path.name
+    while True:
+        stem = Path(name).stem
+        suffix = Path(name).suffix.lower()
+        if suffix in KNOWN_EXTENSIONS:
+            name = stem
+        else:
+            break
+    
+    output_name = name + output_format.extension
     return format_dir / output_name
 
 
