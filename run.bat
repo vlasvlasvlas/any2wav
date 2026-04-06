@@ -1,22 +1,20 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
-cd /d "%~dp0"
+set "BASE_DIR=%~dp0"
+cd /d "%BASE_DIR%"
 
-if not exist "venv\Scripts\activate.bat" (
+set "PYTHON_EXE=%BASE_DIR%venv\Scripts\python.exe"
+if not exist "%PYTHON_EXE%" (
     echo ERROR: No se encontro el entorno virtual.
-    echo Ejecuta primero: setup.bat
+    echo Ejecuta primero: setup.bat o start.bat
+    echo.
+    pause
     exit /b 1
 )
 
-call "venv\Scripts\activate.bat" >nul 2>&1
-if errorlevel 1 (
-    echo ERROR: No se pudo activar el entorno virtual.
-    exit /b 1
-)
-
-set "INPUT_DIR=.\in"
-set "OUTPUT_DIR=.\out"
+set "INPUT_DIR=%BASE_DIR%in"
+set "OUTPUT_DIR=%BASE_DIR%out"
 set "FORMAT=wav"
 set "RECURSIVE=0"
 
@@ -127,9 +125,9 @@ echo.
 echo Iniciando conversion...
 echo.
 if "!RECURSIVE!"=="1" (
-    any2wav "!INPUT_DIR!" -o "!OUTPUT_DIR!" -f !FORMAT! -r
+    "%PYTHON_EXE%" -m any2wav "!INPUT_DIR!" -o "!OUTPUT_DIR!" -f !FORMAT! -r
 ) else (
-    any2wav "!INPUT_DIR!" -o "!OUTPUT_DIR!" -f !FORMAT!
+    "%PYTHON_EXE%" -m any2wav "!INPUT_DIR!" -o "!OUTPUT_DIR!" -f !FORMAT!
 )
 echo.
 pause
@@ -147,9 +145,9 @@ echo.
 echo Preview (dry-run)...
 echo.
 if "!RECURSIVE!"=="1" (
-    any2wav "!INPUT_DIR!" -o "!OUTPUT_DIR!" -f !FORMAT! -r --dry-run
+    "%PYTHON_EXE%" -m any2wav "!INPUT_DIR!" -o "!OUTPUT_DIR!" -f !FORMAT! -r --dry-run
 ) else (
-    any2wav "!INPUT_DIR!" -o "!OUTPUT_DIR!" -f !FORMAT! --dry-run
+    "%PYTHON_EXE%" -m any2wav "!INPUT_DIR!" -o "!OUTPUT_DIR!" -f !FORMAT! --dry-run
 )
 echo.
 pause

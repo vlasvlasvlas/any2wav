@@ -1,7 +1,11 @@
 @echo off
 setlocal EnableExtensions
 
-cd /d "%~dp0"
+set "BASE_DIR=%~dp0"
+set "VENV_PYTHON=%BASE_DIR%venv\Scripts\python.exe"
+set "REQ_FILE=%BASE_DIR%requirements.txt"
+
+cd /d "%BASE_DIR%"
 
 echo.
 echo ============================================
@@ -25,15 +29,12 @@ if %errorlevel%==0 (
 )
 
 if "%PYTHON_EXE%"=="" (
-    echo ERROR: Python 3 no esta instalado o no esta en PATH.
-    echo Descargalo desde https://python.org
-    exit /b 1
+    call :fail "Python 3 no esta instalado o no esta en PATH. Descargalo desde https://python.org"
 )
 
 "%PYTHON_EXE%" %PYTHON_ARGS% --version
 if errorlevel 1 (
-    echo ERROR: No se pudo ejecutar Python.
-    exit /b 1
+    call :fail "No se pudo ejecutar Python."
 )
 
 echo.
@@ -47,6 +48,8 @@ if errorlevel 1 (
     echo.
     echo Opcion rapida (winget):
     echo winget install --id Gyan.FFmpeg -e
+    echo.
+    pause
     exit /b 1
 )
 
@@ -58,26 +61,24 @@ for /f "delims=" %%A in ('ffmpeg -version ^| findstr /B /C:"ffmpeg version"') do
 
 echo.
 echo [3/4] Creando entorno virtual...
-if exist "venv\Scripts\python.exe" (
+if exist "%VENV_PYTHON%" (
     echo AVISO: Ya existe ./venv, se reutiliza.
 ) else (
-    "%PYTHON_EXE%" %PYTHON_ARGS% -m venv venv
+    "%PYTHON_EXE%" %PYTHON_ARGS% -m venv "%BASE_DIR%venv"
     if errorlevel 1 (
-        echo ERROR: No se pudo crear el entorno virtual.
-        exit /b 1
+        call :fail "No se pudo crear el entorno virtual."
     )
     echo OK: Entorno virtual creado en .\venv
 )
 
 echo.
 echo [4/4] Instalando dependencias...
-call "venv\Scripts\activate.bat"
-python -m pip install --upgrade pip
-if errorlevel 1 exit /b 1
-pip install -r requirements.txt
-if errorlevel 1 exit /b 1
-pip install -e .
-if errorlevel 1 exit /b 1
+"%VENV_PYTHON%" -m pip install --upgrade pip
+if errorlevel 1 call :fail "Fallo la actualizacion de pip."
+"%VENV_PYTHON%" -m pip install -r "%REQ_FILE%"
+if errorlevel 1 call :fail "Fallo la instalacion de requirements."
+"%VENV_PYTHON%" -m pip install -e "%BASE_DIR%"
+if errorlevel 1 call :fail "Fallo la instalacion editable del proyecto."
 echo OK: Dependencias instaladas.
 
 echo.
@@ -93,3 +94,9 @@ echo      any2wav .\in -f wav
 echo.
 
 exit /b 0
+
+:fail
+echo ERROR: %~1
+echo.
+pause
+exit /b 1

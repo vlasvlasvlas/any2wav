@@ -75,6 +75,11 @@ cd any2wav
 setup.bat
 ```
 
+Opción rápida (setup + app en un paso):
+```bat
+start.bat
+```
+
 **macOS / Linux**
 ```bash
 chmod +x setup.sh
@@ -109,6 +114,11 @@ any2wav/
 **Windows**
 ```bat
 run.bat
+```
+
+Inicio directo (si falta entorno, lo configura y luego abre la app):
+```bat
+start.bat
 ```
 
 **macOS / Linux**
@@ -216,6 +226,7 @@ any2wav/
 ├── run.bat            # Menú interactivo (Windows)
 ├── setup.sh           # Instalación (macOS/Linux)
 ├── setup.bat          # Instalación (Windows)
+├── start.bat          # Todo en uno (Windows: setup + app)
 └── README.md
 ```
 
