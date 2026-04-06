@@ -6,7 +6,9 @@ env/
 
 # Python
 __pycache__/
+**/__pycache__/
 *.py[cod]
+**/*.py[cod]
 *$py.class
 *.so
 .Python
@@ -31,9 +33,9 @@ wheels/
 logs/
 
 # Conversion folders (keep folders, ignore contents)
-in/*
+in/**
 !in/.gitkeep
-out/*
+out/**
 !out/.gitkeep
 
 # IDE

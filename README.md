@@ -32,7 +32,7 @@
 | ⏩ **Skip inteligente** | No reprocesa archivos que ya existen |
 | 📊 **Progreso visual** | Barras de progreso, contadores, estadísticas |
 | 📝 **Logging completo** | Registro de ejecución y conversiones en JSON |
-| 🖥️ **Menú interactivo** | Interfaz ASCII visual con `./run.sh` |
+| 🖥️ **Menú interactivo** | Interfaz visual para Windows (`run.bat`) y macOS/Linux (`./run.sh`) |
 
 ---
 
@@ -43,14 +43,21 @@
 
 ### Instalar FFmpeg
 
+**Windows**
+```bat
+winget install --id Gyan.FFmpeg -e
+```
+Si preferís instalarlo manualmente: https://ffmpeg.org/download.html  
+(recordá agregar la carpeta `bin` de FFmpeg al `PATH`).
+
+**macOS**
 ```bash
-# macOS
 brew install ffmpeg
+```
 
-# Ubuntu/Debian
-sudo apt install ffmpeg
-
-# Windows - Descargar de https://ffmpeg.org/download.html
+**Linux (Ubuntu/Debian)**
+```bash
+sudo apt update && sudo apt install ffmpeg
 ```
 
 ---
@@ -61,8 +68,15 @@ sudo apt install ffmpeg
 # Clonar el repositorio
 git clone https://github.com/vlasvlasvlas/any2wav.git
 cd any2wav
+```
 
-# Ejecutar setup (crea venv e instala dependencias)
+**Windows (CMD o PowerShell)**
+```bat
+setup.bat
+```
+
+**macOS / Linux**
+```bash
 chmod +x setup.sh
 ./setup.sh
 ```
@@ -83,7 +97,7 @@ any2wav/
 
 **Simplemente:**
 1. Copiá tus archivos a `./in`
-2. Ejecutá `./run.sh`
+2. Ejecutá el menú interactivo (`run.bat` en Windows o `./run.sh` en macOS/Linux)
 3. Encontralos convertidos en `./out/wav` o `./out/mp3`
 
 ---
@@ -92,6 +106,12 @@ any2wav/
 
 ### Opción 1: Menú Interactivo (recomendado)
 
+**Windows**
+```bat
+run.bat
+```
+
+**macOS / Linux**
 ```bash
 ./run.sh
 ```
@@ -104,13 +124,27 @@ Abre un menú visual donde podés:
 
 ### Opción 2: Línea de Comandos
 
+**Windows (CMD)**
+```bat
+venv\Scripts\activate
+any2wav .\in -f wav
+```
+
+**Windows (PowerShell)**
+```powershell
+.\venv\Scripts\Activate.ps1
+any2wav .\in -f wav
+```
+
+**macOS / Linux**
 ```bash
-# Activar entorno virtual
 source venv/bin/activate
 
-# Convertir todos los archivos a WAV
 any2wav ./in -f wav
+```
 
+Comandos útiles (todos los SO, adaptando separadores de ruta):
+```bash
 # Convertir a MP3
 any2wav ./in -f mp3
 
@@ -178,8 +212,10 @@ any2wav/
 │   └── logger.py      # Sistema de logging
 ├── in/                # Archivos a convertir
 ├── out/               # Archivos convertidos
-├── run.sh             # Menú interactivo
-├── setup.sh           # Setup automático
+├── run.sh             # Menú interactivo (macOS/Linux)
+├── run.bat            # Menú interactivo (Windows)
+├── setup.sh           # Instalación (macOS/Linux)
+├── setup.bat          # Instalación (Windows)
 └── README.md
 ```
 
